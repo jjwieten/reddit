@@ -1,6 +1,7 @@
 import praw
 import tkinter as tk
 import threading
+import time
 
 
 reddit = praw.Reddit(
