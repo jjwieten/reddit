@@ -25,6 +25,9 @@ class IncomingSubmissions:
 
     def GetSpeed(self):
         return self.speed_scale
+    
+    def SetSpeed(self, NewSpeed):
+        self.speed = NewSpeed
 
     def TogglePause(self):
         if self.paused:
@@ -68,9 +71,12 @@ def MakeFrame(intf):
     root.title("Incoming reddit submissions")
     root.geometry('600x600')
 
-    # Label that shows the current speed
-    speedLabel = tk.Label(root, text="The incoming submissions speed is " + str(intf.GetSpeed()))
-    speedLabel.pack()
+    # Scale to set the speed
+    speed = tk.DoubleVar()
+    s = tk.Scale(root, variable=speed, orient = tk.HORIZONTAL, from_ = 1, to = 10)
+    sb = tk.Button(root, text="Set this speed", command=lambda:[intf.SetSpeed(speed.get()),makeSpeedLabel(root, speed.get())])
+    sb.pack()
+    s.pack()
 
     # Button to pause/unpause the incoming submissions
     b = tk.Button(None, text="Pauze/Unpause", command=intf.TogglePause)
@@ -82,10 +88,11 @@ def MakeFrame(intf):
     tree.insert('', 0, 'gallery', text='Applications 2')
     tree.pack()
 
-    # Scale to set the speed
-
     return root
 
+def makeSpeedLabel(root,speed):
+    speedLabel = tk.Label(root, text="The incoming submissions speed is "+str(speed))
+    speedLabel.pack()
 
 def main():
     interface = IncomingSubmissions()
