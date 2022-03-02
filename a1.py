@@ -21,7 +21,18 @@ class IncomingSubmissions:
         self.speed_scale = 1
         self.blacklist = []
         self.whitelist = []
+       
+    def GetSpeed(self):
+        return self.speed_scale
 
+    def TogglePause(self):
+        if self.paused:
+            self.paused = False
+            print(self.paused)
+        else:
+            self.paused = True
+            print(self.paused)
+        
     def incoming(self):
         last_post = None
         while True:
@@ -50,9 +61,29 @@ class IncomingSubmissions:
                 submission = self.queue.pop(0)
                 print(submission.subreddit, submission.title)
 
+def MakeFrame(intf):
+    root = tk.Tk()
+    root.title("Incoming reddit submissions")
+    root.geometry('600x600')
+
+    # Label that shows the current speed
+    speedLabel = tk.Label(root, text="The incoming submissions speed is "+ str(intf.GetSpeed()))
+    speedLabel.pack()
+    
+    #Button to pause/unpause the incoming submissions
+    b = tk.Button(None, text="Pauze/Unpause", command=intf.TogglePause)
+    b.pack()
+
+    # Scale to set the speed
+
+    return root
+
 
 def main():
     interface = IncomingSubmissions()
+    root = MakeFrame(interface)
+    root.mainloop()
+    
     # TypeError: get() missing 1 required positional argument: 'self'
     # Cause: threading passes one less argument than desired due to the usage of self in the interface class
     t1 = threading.Thread(target=interface.incoming)
