@@ -1,5 +1,6 @@
 import praw
 import tkinter as tk
+import threading
 
 
 reddit = praw.Reddit(
@@ -31,24 +32,31 @@ def process_child_comments(parent, count):
         # count = process_child_comments(top_level_comment.replies, count)
 #   print(count)
 
+class Queue:
+    """A Python list as submission queue"""
+    def __init__(self):
+        self.queue = []
 
+    def add(self, item):
+        # Add item to queue
+        self.queue.append(item)
+
+    def get(self):
+        # Get top item from queue
+        self.queue.pop(0)
+
+    def clear(self):
+        # Clear queue
+        self.queue = []
 
 
 class IncomingSubmissions(tk.Frame):
     def __init__(self):
-        pass 
-
-    def incoming():
-        while True:
-            try:
-                # how can we check if this retrieves the right posts?
-                for submission in reddit.subreddit("all").new(limit=1):
-                    print(submission.title)
-                    print(submission.subreddit)
-
-            except:
-                pass
+        self.paused = False
+        self.speed_scale = 1
+        self.blacklist = []
+        self.whitelist = []
 
 
-IncomingSubmissions.incoming()
-
+def main():
+    IncomingSubmissions.incoming()
