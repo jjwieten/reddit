@@ -12,28 +12,10 @@ reddit = praw.Reddit(
 )
 
 
-class Queue:
-    """A Python list as submission queue"""
-    def __init__(self):
-        self.queue = []
-
-    def add(self, item):
-        # Add item to queue
-        self.queue.append(item)
-
-    def get(self):
-        # Get top item from queue
-        return self.queue.pop(0)
-
-    def clear(self):
-        # Clear queue
-        self.queue = []
-
-
 class IncomingSubmissions:
     """The top-level class for submission processing"""
-    def __init__(self, q):
-        self.queue = q
+    def __init__(self):
+        self.queue = []
         self.paused = False
         self.speed_scale = 1
         self.blacklist = []
@@ -50,27 +32,26 @@ class IncomingSubmissions:
                     # Check whitelist
                     elif self.whitelist:
                         if submission.subreddit in self.whitelist:
-                            self.queue.add(submission)
+                            self.queue.append(submission)
                     # If whitelist isn't present, check blacklist
                     elif self.blacklist:
                         if submission.subreddit not in self.blacklist:
-                            self.queue.add(submission)
+                            self.queue.append(submission)
                     # If neither are present, add by default.
                     else:
-                        self.queue.add(submission)
+                        self.queue.append(submission)
                     # Save submission as last weighed post
                     last_post = submission
 
     def post(self):
         while True:
             if self.queue:
-                submission = self.queue.get()
+                submission = self.queue.pop(0)
                 print(submission.subreddit, submission.title)
 
 
 def main():
-    queue = Queue
-    interface = IncomingSubmissions(queue)
+    interface = IncomingSubmissions()
     # TypeError: get() missing 1 required positional argument: 'self'
     # Cause: threading passes one less argument than desired due to the usage of self in the interface class
     t1 = threading.Thread(target=interface.incoming)
