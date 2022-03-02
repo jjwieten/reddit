@@ -40,11 +40,15 @@ class IncomingSubmissions:
         self.whitelist = []
 
     def incoming(self):
+        last_post = None
         while True:
             if not self.paused:
                 for submission in reddit.subreddit("all").new(limit=1):
+                    # Prevent re-printing of latest post
+                    if last_post == submission:
+                        pass
                     # Check whitelist
-                    if self.whitelist:
+                    elif self.whitelist:
                         if submission.subreddit in self.whitelist:
                             self.queue.add(submission)
                     # If whitelist isn't present, check blacklist
@@ -54,6 +58,8 @@ class IncomingSubmissions:
                     # If neither are present, add by default.
                     else:
                         self.queue.add(submission)
+                    # Save submission as last weighed post
+                    last_post = submission
 
     def post(self):
         while True:
