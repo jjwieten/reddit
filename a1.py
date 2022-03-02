@@ -43,20 +43,49 @@ class Queue:
 
     def get(self):
         # Get top item from queue
-        self.queue.pop(0)
+        return self.queue.pop(0)
 
     def clear(self):
         # Clear queue
         self.queue = []
 
 
-class IncomingSubmissions(tk.Frame):
-    def __init__(self):
+class IncomingSubmissions:
+    """The top-level class for submission processing"""
+    def __init__(self, q):
+        self.queue = q
         self.paused = False
         self.speed_scale = 1
         self.blacklist = []
         self.whitelist = []
 
+    def incoming(self):
+        while True:
+            if not self.paused:
+                for submission in reddit.subreddit("all").new(limit=1):
+                    # Check whitelist
+                    if self.whitelist:
+                        if submission.subreddit in self.whitelist:
+                            self.queue.add(submission)
+                    # If whitelist isn't present, check blacklist
+                    elif self.blacklist:
+                        if submission.subreddit not in self.blacklist:
+                            self.queue.add(submission)
+                    # If neither are present, add by default.
+                    else:
+                        self.queue.add(submission)
+
+    def post(self):
+        while True:
+            if self.queue:
+                submission = self.queue.get()
+                print(submission.subreddit, submission.title)
+
 
 def main():
-    IncomingSubmissions.incoming()
+    queue = Queue
+    interface = IncomingSubmissions(queue)
+
+
+if __name__ == "__main__":
+    main()
