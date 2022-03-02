@@ -12,26 +12,6 @@ reddit = praw.Reddit(
 )
 
 
-def process_child_comments(parent, count):
-    for comment in parent:
-        count += 1
-        #print(comment.body)
-        count = process_child_comments(comment.replies, count)
-    return count
-
-
-#subreddit = reddit.subreddit("thenetherlands")
-
-#for submission in subreddit.hot(limit=1):
-#    submission.comments.replace_more(limit=None)
-#    print(submission.title)
-#    count = 0
-#    for top_level_comment in submission.comments.list():
-#        count += 1
-        # print(top_level_comment.body)
-        # count = process_child_comments(top_level_comment.replies, count)
-#   print(count)
-
 class Queue:
     """A Python list as submission queue"""
     def __init__(self):
@@ -85,6 +65,12 @@ class IncomingSubmissions:
 def main():
     queue = Queue
     interface = IncomingSubmissions(queue)
+    # TypeError: get() missing 1 required positional argument: 'self'
+    # Cause: threading passes one less argument than desired due to the usage of self in the interface class
+    t1 = threading.Thread(target=interface.incoming)
+    t2 = threading.Thread(target=interface.post)
+    t1.start()
+    t2.start()
 
 
 if __name__ == "__main__":
