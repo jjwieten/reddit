@@ -81,6 +81,7 @@ def main():
     root.geometry('600x400')
 
     interface = IncomingSubmissions(root)
+    interface.pack()
 
     # Scale to set the speed
     speed = tk.DoubleVar()

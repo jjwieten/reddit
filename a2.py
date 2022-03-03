@@ -5,10 +5,10 @@ import threading
 import time
 
 reddit = praw.Reddit(
-    username="jj_bot_hci",
+    username="hci_bot_a1",
     password="s3786617",
-    client_id="hEahD4o3y7iGerSQsrwveg",
-    client_secret="tf_fC8X0bFb-W0TkxUPjPHm6jReQ0A",
+    client_id="4-WmhNJXd3n-ZhCsOa3XAQ",
+    client_secret="tOBLYrbRKLcz6yDyR8ypNBPcUfL_sw",
     user_agent="hci"
 )
 
