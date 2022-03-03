@@ -13,46 +13,56 @@ reddit = praw.Reddit(
 )
 
 
-class CommentTreeDisplay:
+class CommentTreeDisplay(tk.Frame):
+    def __init__(self, root):
+        tk.Frame.__init__(self, root)
+        self.topframe = tk.Frame(self)
+        self.exit = False
+
+        # Create menubar
+        menubar = tk.Menu()
+        # Add file menu
+        file_menu = tk.Menu(menubar, tearoff=0)
+        file_menu.add_command(label="Exit")
+        menubar.add_cascade(label="File", menu=file_menu)
+        # Add processing menu
+        proc_menu = tk.Menu(menubar, tearoff=0)
+        proc_menu.add_command(label="Load comments", command=self.load_comments)
+        menubar.add_cascade(label="Processing", menu=proc_menu)
+        root.config(menu=menubar)
+
     def showComments(self, url):
-        pass
+        reddit.submission(self, url)
 
 
-def load_comments():
-    top = tk.Tk()
-    top.geometry("300x100")
-    popup = tk.Entry(top)
-    btn = tk.Button(top, text="Submit URL", command=lambda: get_url(popup.get(), top))
-    popup.pack()
-    btn.pack()
-    top.mainloop()
+
+    def load_comments(self):
+        top = tk.Tk()
+        top.geometry("300x100")
+        popup = tk.Entry(top)
+        btn = tk.Button(top, text="Submit URL", command=lambda: self.get_url(popup.get(), top))
+        popup.pack()
+        btn.pack()
+        top.mainloop()
 
 
-def get_url(url_in, top):
-    try:
-        url = url_in.split("/")[-3]
-        print(url)
-        top.destroy()
-    except IndexError:
-        print("Bad url")
+    def get_url(self,url_in, top):
+        try:
+            url = url_in.split("/")[-3]
+            top.destroy()
+            #start making the comment tree
+            ctd = CommentTreeDisplay()
+            ctd.showComments(url)
+        except IndexError:
+            e = tk.Label(top, text="Please enter a valid URL\n")
+            e.pack()
 
 
 def main():
     root = tk.Tk()
     root.title = 'CommentTreeDisplay'
-
-    # Create menubar
-    menubar = tk.Menu()
-    # Add file menu
-    file_menu = tk.Menu(menubar, tearoff=0)
-    file_menu.add_command(label="Exit")
-    menubar.add_cascade(label="File", menu=file_menu)
-    # Add processing menu
-    proc_menu = tk.Menu(menubar, tearoff=0)
-    proc_menu.add_command(label="Load comments", command=load_comments)
-    menubar.add_cascade(label="Processing", menu=proc_menu)
-    root.config(menu=menubar)
-
+    win = CommentTreeDisplay(root)
+    win.pack
     root.mainloop()
 
 
@@ -78,3 +88,5 @@ if __name__ == "__main__":
         # print(top_level_comment.body)
         # count = process_child_comments(top_level_comment.replies, count)
 #   print(count)
+
+
