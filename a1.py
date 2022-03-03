@@ -66,20 +66,28 @@ class IncomingSubmissions:
                     print(submission.subreddit, submission.title)
 
 
-def MakeFrame(intf):
+def makeSpeedLabel(root,speed):
+    speedLabel = tk.Label(root, text="The incoming submissions speed is "+str(speed))
+    speedLabel.pack()
+
+
+def main():
     root = tk.Tk()
     root.title("Incoming reddit submissions")
-    root.geometry('600x600')
+    root.geometry('600x400')
+
+    interface = IncomingSubmissions()
 
     # Scale to set the speed
     speed = tk.DoubleVar()
-    s = tk.Scale(root, variable=speed, orient = tk.HORIZONTAL, from_ = 1, to = 10)
-    sb = tk.Button(root, text="Set this speed", command=lambda:[intf.SetSpeed(speed.get()),makeSpeedLabel(root, speed.get())])
+    s = tk.Scale(root, variable=speed, orient=tk.HORIZONTAL, from_=1, to=10)
+    sb = tk.Button(root, text="Set this speed",
+                   command=lambda: [interface.SetSpeed(speed.get()), makeSpeedLabel(root, speed.get())])
     sb.pack()
     s.pack()
 
     # Button to pause/unpause the incoming submissions
-    b = tk.Button(None, text="Pauze/Unpause", command=intf.TogglePause)
+    b = tk.Button(None, text="Pauze/Unpause", command=interface.TogglePause)
     b.pack()
 
     # Treeview widget to display incoming submissions
@@ -87,16 +95,6 @@ def MakeFrame(intf):
     tree.insert('', 0, 'TEST', text='Applications')
     tree.insert('', 0, 'gallery', text='Applications 2')
     tree.pack()
-
-    return root
-
-def makeSpeedLabel(root,speed):
-    speedLabel = tk.Label(root, text="The incoming submissions speed is "+str(speed))
-    speedLabel.pack()
-
-def main():
-    interface = IncomingSubmissions()
-    root = MakeFrame(interface)
     t1 = threading.Thread(target=interface.incoming)
     t2 = threading.Thread(target=lambda: interface.post(root))
     t1.start()
