@@ -5,23 +5,27 @@ import threading
 import time
 
 reddit = praw.Reddit(
-    username="jj_bot_hci",
+    username="hci_bot_a1",
     password="s3786617",
-    client_id="hEahD4o3y7iGerSQsrwveg",
-    client_secret="tf_fC8X0bFb-W0TkxUPjPHm6jReQ0A",
+    client_id="4-WmhNJXd3n-ZhCsOa3XAQ",
+    client_secret="tOBLYrbRKLcz6yDyR8ypNBPcUfL_sw",
     user_agent="hci"
 )
 
 
-class IncomingSubmissions:
+class IncomingSubmissions(tk.Frame):
     """The top-level class for submission processing"""
 
-    def __init__(self):
+    def __init__(self, master):
+        tk.Frame.__init__(self, master)
         self.queue = []
         self.paused = False
         self.speed_scale = 1
         self.blacklist = []
         self.whitelist = []
+
+        self.scale = tk.Scale(self)
+        self.scale.pack()
 
     def GetSpeed(self):
         return self.speed_scale
@@ -58,7 +62,7 @@ class IncomingSubmissions:
                 # Save submission as last weighed post
                 last_post = submission
 
-    def post(self, root):
+    def post(self):
         while True:
             if not self.paused:
                 if self.queue:
@@ -76,7 +80,7 @@ def main():
     root.title("Incoming reddit submissions")
     root.geometry('600x400')
 
-    interface = IncomingSubmissions()
+    interface = IncomingSubmissions(root)
 
     # Scale to set the speed
     speed = tk.DoubleVar()
@@ -96,7 +100,7 @@ def main():
     tree.insert('', 0, 'gallery', text='Applications 2')
     tree.pack()
     t1 = threading.Thread(target=interface.incoming)
-    t2 = threading.Thread(target=lambda: interface.post(root))
+    t2 = threading.Thread(target=interface.post)
     t1.start()
     t2.start()
 
