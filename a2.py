@@ -23,7 +23,7 @@ class CommentTreeDisplay(tk.Frame):
         menubar = tk.Menu()
         # Add file menu
         file_menu = tk.Menu(menubar, tearoff=0)
-        file_menu.add_command(label="Exit")
+        file_menu.add_command(label="Exit", command=self.stopRunning)
         menubar.add_cascade(label="File", menu=file_menu)
         # Add processing menu
         proc_menu = tk.Menu(menubar, tearoff=0)
@@ -32,8 +32,16 @@ class CommentTreeDisplay(tk.Frame):
         root.config(menu=menubar)
 
     def showComments(self, url):
-        reddit.submission(self, url)
+        subm_ID = reddit.submission(self, url)
+        print(subm_ID + "sumb id")
+        subm = reddit.__init__(self, subm_ID)
 
+        #count = 0
+        #for top_level_comment in subm.comments.list():
+        #    count += 1
+        #print(top_level_comment.body)
+        #count = self.process_child_comments(top_level_comment.replies, count)
+        #print(count)
 
 
     def load_comments(self):
@@ -50,12 +58,21 @@ class CommentTreeDisplay(tk.Frame):
         try:
             url = url_in.split("/")[-3]
             top.destroy()
-            #start making the comment tree
-            ctd = CommentTreeDisplay()
-            ctd.showComments(url)
+            self.ctd.showComments(url)
         except IndexError:
             e = tk.Label(top, text="Please enter a valid URL\n")
             e.pack()
+
+    def process_child_comments(self, parent, count):
+        for comment in parent:
+            count += 1
+            #print(comment.body)
+            count = self.process_child_comments(comment.replies, count)
+        return count
+
+    def stopRunning(self):
+        self.exit = True
+        exit()
 
 
 def main():
