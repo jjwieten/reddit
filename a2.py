@@ -58,7 +58,7 @@ class CommentTreeDisplay(tk.Frame):
 
     def showComments(self, id):
         submission = reddit.submission(id=id)
-        for comment in submission.comments.list():
+        for comment in submission.comments:
             self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
             self.process_child_comments(comment.replies, 0)
             print(comment.body)
@@ -66,11 +66,8 @@ class CommentTreeDisplay(tk.Frame):
     def process_child_comments(self, parent, count):
         for comment in parent:
             count+=1
-
             #self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
             #self.tree.move(comment.id, parent, count)
-            print(comment.body)
-
             print(comment.body)
             count = self.process_child_comments(comment.replies, count)
         return count
