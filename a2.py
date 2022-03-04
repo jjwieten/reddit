@@ -32,7 +32,6 @@ class CommentTreeDisplay(tk.Frame):
         root.config(menu=self.menubar)
 
         self.tree = ttk.Treeview(self)
-        self.tree.
         self.tree.pack()
 
     def load_comments(self):
@@ -58,23 +57,20 @@ class CommentTreeDisplay(tk.Frame):
             e.pack()
 
     def showComments(self, id):
-        #subm_ID = reddit.submission(url)
-        #print(subm_ID)
-        #subm = reddit.__init__(self, subm_ID)
-
         submission = reddit.submission(id=id)
         for comment in submission.comments.list():
             self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
-
-        #count = 0
-        #for top_level_comment in subm.comments.list():
-        #    count += 1
-        #print(top_level_comment.body)
-        #count = self.process_child_comments(top_level_comment.replies, count)
-        #print(count)
+            self.process_child_comments(comment.replies, 0)
+            print(comment.body)
 
     def process_child_comments(self, parent, count):
         for comment in parent:
+            count+=1
+
+            #self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
+            #self.tree.move(comment.id, parent, count)
+            print(comment.body)
+
             print(comment.body)
             count = self.process_child_comments(comment.replies, count)
         return count
@@ -117,3 +113,9 @@ if __name__ == "__main__":
 #   print(count)
 
 
+# count = 0
+# for top_level_comment in subm.comments.list():
+#    count += 1
+# print(top_level_comment.body)
+# count = self.process_child_comments(top_level_comment.replies, count)
+# print(count)
