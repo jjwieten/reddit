@@ -20,20 +20,40 @@ class CommentTreeDisplay(tk.Frame):
         self.exit = False
 
         # Create menubar
-        menubar = tk.Menu()
+        self.menubar = tk.Menu()
         # Add file menu
-        file_menu = tk.Menu(menubar, tearoff=0)
-        file_menu.add_command(label="Exit", command=self.stopRunning)
-        menubar.add_cascade(label="File", menu=file_menu)
+        self.file_menu = tk.Menu(self.menubar, tearoff=0)
+        self.file_menu.add_command(label="Exit", command=self.stopRunning)
+        self.menubar.add_cascade(label="File", menu=self.file_menu)
         # Add processing menu
-        proc_menu = tk.Menu(menubar, tearoff=0)
-        proc_menu.add_command(label="Load comments", command=self.load_comments)
-        menubar.add_cascade(label="Processing", menu=proc_menu)
-        root.config(menu=menubar)
+        self.proc_menu = tk.Menu(self.menubar, tearoff=0)
+        self.proc_menu.add_command(label="Load comments", command=self.load_comments)
+        self.menubar.add_cascade(label="Processing", menu=self.proc_menu)
+        root.config(menu=self.menubar)
+
+        self.tree = ttk.Treeview(self)
+
+    def load_comments(self):
+        top = tk.Tk()
+        top.geometry("300x100")
+        popup = tk.Entry(top)
+        url_btn = tk.Button(top, text="Submit URL", command=lambda: self.get_url(popup.get(), top))
+        popup.pack()
+        url_btn.pack()
+        top.mainloop()
+
+    def get_url(self, url_in, top):
+        try:
+            url = url_in.split("/")[-3]
+            top.destroy()
+            self.showComments(url)
+        except IndexError:
+            e = tk.Label(top, text="Please enter a valid URL\n")
+            e.pack()
 
     def showComments(self, url):
         subm_ID = reddit.submission(url)
-        #print(subm_ID)
+        print(subm_ID)
         subm = reddit.__init__(self, subm_ID)
 
         #count = 0
@@ -43,30 +63,9 @@ class CommentTreeDisplay(tk.Frame):
         #count = self.process_child_comments(top_level_comment.replies, count)
         #print(count)
 
-
-    def load_comments(self):
-        top = tk.Tk()
-        top.geometry("300x100")
-        popup = tk.Entry(top)
-        btn = tk.Button(top, text="Submit URL", command=lambda: self.get_url(popup.get(), top))
-        popup.pack()
-        btn.pack()
-        top.mainloop()
-
-
-    def get_url(self,url_in, top):
-        try:
-            url = url_in.split("/")[-3]
-            top.destroy()
-            self.showComments(url)
-        except IndexError:
-            e = tk.Label(top, text="Please enter a valid URL\n")
-            e.pack()
-
     def process_child_comments(self, parent, count):
         for comment in parent:
-            count += 1
-            #print(comment.body)
+            print(comment.body)
             count = self.process_child_comments(comment.replies, count)
         return count
 
@@ -77,6 +76,7 @@ class CommentTreeDisplay(tk.Frame):
 
 def main():
     root = tk.Tk()
+    root.geometry("300x200")
     root.title = 'CommentTreeDisplay'
     win = CommentTreeDisplay(root)
     win.pack()
