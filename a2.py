@@ -77,9 +77,10 @@ class CommentTreeDisplay(tk.Frame):
 
 def main():
     root = tk.Tk()
+    root.geometry("300x200")
     root.title = 'CommentTreeDisplay'
     win = CommentTreeDisplay(root)
-    win.pack
+    win.pack()
     root.mainloop()
 
 
