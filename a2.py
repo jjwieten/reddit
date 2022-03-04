@@ -33,7 +33,7 @@ class CommentTreeDisplay(tk.Frame):
 
     def showComments(self, url):
         subm_ID = reddit.submission(url)
-        print(subm_ID)
+        #print(subm_ID)
         subm = reddit.__init__(self, subm_ID)
 
         #count = 0
