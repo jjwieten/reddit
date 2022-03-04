@@ -68,7 +68,7 @@ class CommentTreeDisplay(tk.Frame):
             self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
             self.tree.move(comment.id, parent_id, 0)
             print(comment.body)
-            self.process_child_comments(comment.replies, parent_id)
+            self.process_child_comments(comment.replies, comment.id)
 
     def stopRunning(self):
         self.exit = True
