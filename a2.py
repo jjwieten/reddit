@@ -44,7 +44,11 @@ class CommentTreeDisplay(tk.Frame):
 
     def get_url(self, url_in, top):
         try:
-            url = url_in.split("/")[-3]
+            #find appropriate id
+            if url_in[-1] == "/":
+                url = url_in.split("/")[-3]
+            else:
+                url = url_in.split("/")[-2]
             top.destroy()
             self.showComments(url)
         except IndexError:
