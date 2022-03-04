@@ -32,8 +32,8 @@ class CommentTreeDisplay(tk.Frame):
         root.config(menu=menubar)
 
     def showComments(self, url):
-        subm_ID = reddit.submission(self, url)
-        print(subm_ID + "sumb id")
+        subm_ID = reddit.submission(url)
+        print(subm_ID)
         subm = reddit.__init__(self, subm_ID)
 
         #count = 0
