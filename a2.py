@@ -46,19 +46,23 @@ class CommentTreeDisplay(tk.Frame):
         try:
             #find appropriate id
             if url_in[-1] == "/":
-                url = url_in.split("/")[-3]
+                id = url_in.split("/")[-3]
             else:
-                url = url_in.split("/")[-2]
+                id = url_in.split("/")[-2]
             top.destroy()
-            self.showComments(url)
+            self.showComments(id)
         except IndexError:
             e = tk.Label(top, text="Please enter a valid URL\n")
             e.pack()
 
-    def showComments(self, url):
-        subm_ID = reddit.submission(url)
-        print(subm_ID)
-        subm = reddit.__init__(self, subm_ID)
+    def showComments(self, id):
+        #subm_ID = reddit.submission(url)
+        #print(subm_ID)
+        #subm = reddit.__init__(self, subm_ID)
+
+        submission = reddit.submission(id=id)
+        for comment in submission.comments.list():
+            print(comment.body)
 
         #count = 0
         #for top_level_comment in subm.comments.list():
