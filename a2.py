@@ -60,16 +60,16 @@ class CommentTreeDisplay(tk.Frame):
         submission = reddit.submission(id=id)
         for comment in submission.comments:
             self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
-            self.process_child_comments(comment.replies, 0)
+            self.process_child_comments(comment.replies, 0, comment)
             print(comment.body)
 
-    def process_child_comments(self, parent, count):
+    def process_child_comments(self, parent, count, parentid):
         for comment in parent:
             count+=1
-            #self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
-            #self.tree.move(comment.id, parent, count)
+            self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
+            self.tree.move(comment.id, parentid, count)
             print(comment.body)
-            count = self.process_child_comments(comment.replies, count)
+            count = self.process_child_comments(comment.replies, count, parentid)
         return count
 
     def stopRunning(self):
