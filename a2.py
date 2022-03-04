@@ -32,6 +32,8 @@ class CommentTreeDisplay(tk.Frame):
         root.config(menu=self.menubar)
 
         self.tree = ttk.Treeview(self)
+        self.tree.
+        self.tree.pack()
 
     def load_comments(self):
         top = tk.Tk()
@@ -62,7 +64,7 @@ class CommentTreeDisplay(tk.Frame):
 
         submission = reddit.submission(id=id)
         for comment in submission.comments.list():
-            print(comment.body)
+            self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
 
         #count = 0
         #for top_level_comment in subm.comments.list():
