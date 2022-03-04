@@ -56,21 +56,19 @@ class CommentTreeDisplay(tk.Frame):
             e = tk.Label(top, text="Please enter a valid URL\n")
             e.pack()
 
-    def showComments(self, id):
-        submission = reddit.submission(id=id)
+    def showComments(self, c_id):
+        submission = reddit.submission(id=c_id)
         for comment in submission.comments:
             self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
-            self.process_child_comments(comment.replies, 0, comment)
+            self.process_child_comments(comment.replies, comment)
             print(comment.body)
 
-    def process_child_comments(self, parent, count, parentid):
+    def process_child_comments(self, parent, parent_id):
         for comment in parent:
-            count+=1
             self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
-            self.tree.move(comment.id, parentid, count)
+            self.tree.move(comment.id, parent_id, 0)
             print(comment.body)
-            count = self.process_child_comments(comment.replies, count, parentid)
-        return count
+            self.process_child_comments(comment.replies, parent_id)
 
     def stopRunning(self):
         self.exit = True
