@@ -1,8 +1,6 @@
 import praw
 import tkinter as tk
 from tkinter import ttk
-import threading
-import time
 
 reddit = praw.Reddit(
     username="hci_bot_a1",
@@ -14,6 +12,7 @@ reddit = praw.Reddit(
 
 
 class CommentTreeDisplay(tk.Frame):
+    """ Class for creating comment tree """
     def __init__(self, root):
         tk.Frame.__init__(self, root)
         self.topframe = tk.Frame(self)
@@ -35,6 +34,9 @@ class CommentTreeDisplay(tk.Frame):
         self.tree.pack()
 
     def load_comments(self):
+        """
+        Make frame to enter url and recieve input
+        """
         top = tk.Tk()
         top.geometry("300x100")
         popup = tk.Entry(top)
@@ -44,8 +46,10 @@ class CommentTreeDisplay(tk.Frame):
         top.mainloop()
 
     def get_url(self, url_in, top):
+        """
+        From input get the comment id, or return error message
+        """
         try:
-            #find appropriate id
             if url_in[-1] == "/":
                 id = url_in.split("/")[-3]
             else:
@@ -57,6 +61,9 @@ class CommentTreeDisplay(tk.Frame):
             e.pack()
 
     def showComments(self, c_id):
+        """
+        Find all top level comments
+        """
         submission = reddit.submission(id=c_id)
         for comment in submission.comments:
             self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
@@ -64,6 +71,9 @@ class CommentTreeDisplay(tk.Frame):
             print(comment.body)
 
     def process_child_comments(self, parent, parent_id):
+        """
+        Recursive: find all child comments
+        """
         for comment in parent:
             self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
             self.tree.move(comment.id, parent_id, 0)
@@ -71,11 +81,15 @@ class CommentTreeDisplay(tk.Frame):
             self.process_child_comments(comment.replies, comment.id)
 
     def stopRunning(self):
+        """
+        Funciton to exit program
+        """
         self.exit = True
         exit()
 
 
 def main():
+    #Make window
     root = tk.Tk()
     root.geometry("300x200")
     root.title = 'CommentTreeDisplay'
@@ -87,30 +101,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-#def process_child_comments(parent, count):
-#    for comment in parent:
-#        count += 1
-#        #print(comment.body)
-#        count = process_child_comments(comment.replies, count)
-#    return count
-
-
-#subreddit = reddit.subreddit("thenetherlands")
-
-#for submission in subreddit.hot(limit=1):
-#    submission.comments.replace_more(limit=None)
-#    print(submission.title)
-#    count = 0
-#    for top_level_comment in submission.comments.list():
-#        count += 1
-        # print(top_level_comment.body)
-        # count = process_child_comments(top_level_comment.replies, count)
-#   print(count)
-
-
-# count = 0
-# for top_level_comment in subm.comments.list():
-#    count += 1
-# print(top_level_comment.body)
-# count = self.process_child_comments(top_level_comment.replies, count)
-# print(count)
