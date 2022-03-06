@@ -25,37 +25,28 @@ class ResponseCommentTreeDisplay(CommentTreeDisplay):
 
     def double_click_comment(self, event):
         item_id = event.widget.focus()
-        comment_text = self.ask_comment()
-        self.add_comment_to_tree(self, item_id, comment_text)
-        print(item_id)
-        self.tree.bind("<Double-1>", self.double_click_comment)
-
-    def double_click_comment(self, event):
-        item_id = event.widget.focus()
-        print(item_id)
-
-
-    def add_comment_to_tree(self, parent_id, comment_text):
-        comment_id = "{0}_{1}".format(parent_id, self.comment_int)
-        self.comment_int += 1
-        self.tree.insert('', tk.END, text=comment_text, iid=comment_id, open=False)
-        self.tree.move(comment_id, parent_id, 0)
-
-    def ask_comment(self):
-        """
-        Make window to enter url and recieve input comment
-        """
+        # Create response window
         top = tk.Tk()
         top.geometry("300x100")
         popup = tk.Entry(top)
-        url_btn = tk.Button(top, text="Submit comment", command=lambda: testprint(popup.get()))
+        # Set button response
+        url_btn = tk.Button(top, text="Submit comment",
+                            command=lambda: self.add_comment_to_tree(item_id, popup.get(), top))
         popup.pack()
         url_btn.pack()
         top.mainloop()
 
-
-def testprint(input):
-    print(input)
+    def add_comment_to_tree(self, parent_id, comment_text, top):
+        if comment_text != "":
+            # Generate an iid for Treeview comment
+            comment_id = "{0}_{1}".format(parent_id, self.comment_int)
+            self.comment_int += 1
+            self.tree.insert('', tk.END, text=comment_text, iid=comment_id, open=False)
+            self.tree.move(comment_id, parent_id, 0)
+            top.destroy()
+        else:
+            e = tk.Label(top, text="Please enter a valid URL\n")
+            e.pack()
 
 
 def main():
@@ -69,8 +60,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
