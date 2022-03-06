@@ -227,7 +227,11 @@ class ResponseCommentTreeDisplay(CommentTreeDisplay):
             e = tk.Label(top, text="Please enter a valid URL\n")
             e.pack()
 
-
+def open_submission(event):
+    item_id = event.widget.focus()
+    print(item_id)
+    # new_frame = ResponseCommentTreeDisplay(nb)
+    # nb.add(new_frame, text='item_id')
 
 
 class RedditNotebook(ttk.Notebook):
