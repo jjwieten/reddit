@@ -28,6 +28,12 @@ class ResponseCommentTreeDisplay(CommentTreeDisplay):
         comment_text = self.ask_comment()
         self.add_comment_to_tree(self, item_id, comment_text)
         print(item_id)
+        self.tree.bind("<Double-1>", self.double_click_comment)
+
+    def double_click_comment(self, event):
+        item_id = event.widget.focus()
+        print(item_id)
+
 
     def add_comment_to_tree(self, parent_id, comment_text):
         comment_id = "{0}_{1}".format(parent_id, self.comment_int)
@@ -63,4 +69,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
 

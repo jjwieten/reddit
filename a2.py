@@ -90,7 +90,7 @@ def main():
     #Make window
     root = tk.Tk()
     root.geometry("300x200")
-    root.title = 'CommentTreeDisplay'
+    root.title('CommentTreeDisplay')
     win = CommentTreeDisplay(root)
     win.pack()
     root.mainloop()
