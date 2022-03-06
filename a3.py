@@ -48,18 +48,6 @@ class ResponseCommentTreeDisplay(CommentTreeDisplay):
             e = tk.Label(top, text="Please enter a valid URL\n")
             e.pack()
 
-    def ask_comment(self):
-        """
-        Make window to enter url and recieve input comment
-        """
-        top = tk.Tk()
-        top.geometry("300x100")
-        popup = tk.Entry(top)
-        url_btn = tk.Button(top, text="Submit comment", command=lambda: self.add_comment_to_tree(popup.get()))
-        popup.pack()
-        url_btn.pack()
-        top.mainloop()
-
 
 def main():
     root = tk.Tk()
