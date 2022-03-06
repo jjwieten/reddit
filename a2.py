@@ -35,7 +35,7 @@ class CommentTreeDisplay(tk.Frame):
 
     def load_comments(self):
         """
-        Make frame to enter url and recieve input
+        Make window to enter url and recieve input
         """
         top = tk.Tk()
         top.geometry("300x100")
@@ -68,7 +68,6 @@ class CommentTreeDisplay(tk.Frame):
         for comment in submission.comments:
             self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
             self.process_child_comments(comment.replies, comment)
-            print(comment.body)
 
     def process_child_comments(self, parent, parent_id):
         """
@@ -77,7 +76,6 @@ class CommentTreeDisplay(tk.Frame):
         for comment in parent:
             self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
             self.tree.move(comment.id, parent_id, 0)
-            print(comment.body)
             self.process_child_comments(comment.replies, comment.id)
 
     def stopRunning(self):
