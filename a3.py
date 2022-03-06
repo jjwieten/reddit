@@ -5,6 +5,7 @@ import threading
 import time
 from a2 import CommentTreeDisplay
 
+
 reddit = praw.Reddit(
     username="hci_bot_a1",
     password="s3786617",
@@ -13,113 +14,53 @@ reddit = praw.Reddit(
     user_agent="hci"
 )
 
-class CommentTreeDisplay(tk.Frame):
-    """ Class for creating comment tree """
+
+class ResponseCommentTreeDisplay(CommentTreeDisplay):
     def __init__(self, root):
-        tk.Frame.__init__(self, root)
-        self.topframe = tk.Frame(self)
-        self.exit = False
+        # tk.Frame.__init__(self, CommentTreeDisplay)
+        super().__init__(root)
+        # Counting intreger to append to comment
+        self.comment_int = 0
+        self.tree.bind("<Double-1>", self.double_click_comment)
 
-        # Create menubar
-        self.menubar = tk.Menu()
-        # Add file menu
-        self.file_menu = tk.Menu(self.menubar, tearoff=0)
-        self.file_menu.add_command(label="Exit", command=self.stopRunning)
-        self.menubar.add_cascade(label="File", menu=self.file_menu)
-        # Add processing menu
-        self.proc_menu = tk.Menu(self.menubar, tearoff=0)
-        self.proc_menu.add_command(label="Load comments", command=self.load_comments)
-        self.menubar.add_cascade(label="Processing", menu=self.proc_menu)
-        root.config(menu=self.menubar)
+    def double_click_comment(self, event):
+        item_id = event.widget.focus()
+        comment_text = self.ask_comment()
+        self.add_comment_to_tree(self, item_id, comment_text)
+        print(item_id)
 
-        self.tree = ttk.Treeview(self)
-        self.tree.pack()
+    def add_comment_to_tree(self, parent_id, comment_text):
+        comment_id = "{0}_{1}".format(parent_id, self.comment_int)
+        self.comment_int += 1
+        self.tree.insert('', tk.END, text=comment_text, iid=comment_id, open=False)
+        self.tree.move(comment_id, parent_id, 0)
 
-    def load_comments(self):
+    def ask_comment(self):
         """
-        Make frame to enter url and recieve input
+        Make window to enter url and recieve input comment
         """
         top = tk.Tk()
         top.geometry("300x100")
         popup = tk.Entry(top)
-        url_btn = tk.Button(top, text="Submit URL", command=lambda: self.get_url(popup.get(), top))
+        url_btn = tk.Button(top, text="Submit comment", command=lambda: testprint(popup.get()))
         popup.pack()
         url_btn.pack()
         top.mainloop()
 
-    def get_url(self, url_in, top):
-        """
-        From input get the comment id, or return error message
-        """
-        try:
-            if url_in[-1] == "/":
-                id = url_in.split("/")[-3]
-            else:
-                id = url_in.split("/")[-2]
-            top.destroy()
-            self.showComments(id)
-        except IndexError:
-            e = tk.Label(top, text="Please enter a valid URL\n")
-            e.pack()
-
-    def showComments(self, c_id):
-        """
-        Find all top level comments
-        """
-        submission = reddit.submission(id=c_id)
-        for comment in submission.comments:
-            self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
-            self.process_child_comments(comment.replies, comment)
-
-    def process_child_comments(self, parent, parent_id):
-        """
-        Recursive: find all child comments
-        """
-        for comment in parent:
-            self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
-            self.tree.move(comment.id, parent_id, 0)
-            self.process_child_comments(comment.replies, comment.id)
-
-    def stopRunning(self):
-        """
-        Funciton to exit program
-        """
-        self.exit = True
-        exit()
-
-class ResponseCommentTreeDisplay(CommentTreeDisplay):
-    def __init__(self, root):
-        super().__init__(root)
-
-def ask_comment():
-    """
-    Make window to enter url and recieve input comment
-    """
-    top = tk.Tk()
-    top.geometry("300x100")
-    popup = tk.Entry(top)
-    url_btn = tk.Button(top, text="Submit comment", command=lambda: testprint(popup.get()))
-    popup.pack()
-    url_btn.pack()
-    top.mainloop()
 
 def testprint(input):
     print(input)
 
+
 def main():
-    #Make window
     root = tk.Tk()
     root.geometry("300x200")
-    root.title = 'CommentTreeDisplay'
-    win = CommentTreeDisplay(root)
-    ask_comment()
+    root.title('ResponseCommentTreeDisplay')
+    win = ResponseCommentTreeDisplay(root)
     win.pack()
     root.mainloop()
 
 
 if __name__ == "__main__":
     main()
-
-
-
 
