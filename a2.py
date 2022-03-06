@@ -87,7 +87,7 @@ class CommentTreeDisplay(tk.Frame):
 
 
 def main():
-    #Make window
+    # Make window
     root = tk.Tk()
     root.geometry("300x200")
     root.title('CommentTreeDisplay')
