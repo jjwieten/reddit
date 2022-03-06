@@ -35,7 +35,7 @@ class CommentTreeDisplay(tk.Frame):
 
     def load_comments(self):
         """
-        Make frame to enter url and recieve input
+        Make window to enter url and recieve input
         """
         top = tk.Tk()
         top.geometry("300x100")
