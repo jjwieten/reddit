@@ -28,6 +28,8 @@ class IncomingSubmissions(tk.Frame):
         self.tree = ttk.Treeview(self, columns='Title')
         self.tree.column('Title', width=400)
         self.tree.pack(side='right')
+        # Treeview bind for submission viewing
+        self.tree.bind("<Double-1>", open_submission)
 
         # Scale widget for submission speed
         self.speed_scale = tk.Scale(self, variable=self.speed_val, label="Queue delay",
@@ -136,24 +138,12 @@ class CommentTreeDisplay(tk.Frame):
         self.topframe = tk.Frame(self)
         self.exit = False
 
-        # Create menubar
-        self.menubar = tk.Menu()
-        # Add file menu
-        self.file_menu = tk.Menu(self.menubar, tearoff=0)
-        self.file_menu.add_command(label="Exit", command=self.stopRunning)
-        self.menubar.add_cascade(label="File", menu=self.file_menu)
-        # Add processing menu
-        self.proc_menu = tk.Menu(self.menubar, tearoff=0)
-        self.proc_menu.add_command(label="Load comments", command=self.load_comments)
-        self.menubar.add_cascade(label="Processing", menu=self.proc_menu)
-        root.config(menu=self.menubar)
-
         self.tree = ttk.Treeview(self)
         self.tree.pack()
 
     def load_comments(self):
         """
-        Make window to enter url and recieve input
+        Make window to enter url and receive input
         """
         top = tk.Tk()
         top.geometry("300x100")
@@ -169,11 +159,11 @@ class CommentTreeDisplay(tk.Frame):
         """
         try:
             if url_in[-1] == "/":
-                id = url_in.split("/")[-3]
+                c_id = url_in.split("/")[-3]
             else:
-                id = url_in.split("/")[-2]
+                c_id = url_in.split("/")[-2]
             top.destroy()
-            self.showComments(id)
+            self.showComments(c_id)
         except IndexError:
             e = tk.Label(top, text="Please enter a valid URL\n")
             e.pack()
@@ -198,7 +188,7 @@ class CommentTreeDisplay(tk.Frame):
 
     def stopRunning(self):
         """
-        Funciton to exit program
+        Function to exit program
         """
         self.exit = True
         exit()
@@ -208,7 +198,7 @@ class ResponseCommentTreeDisplay(CommentTreeDisplay):
     def __init__(self, root):
         # tk.Frame.__init__(self, CommentTreeDisplay)
         super().__init__(root)
-        # Counting intreger to append to comment
+        # Counting integer to append to comment
         self.comment_int = 0
         self.tree.bind("<Double-1>", self.double_click_comment)
 
@@ -238,17 +228,40 @@ class ResponseCommentTreeDisplay(CommentTreeDisplay):
             e.pack()
 
 
+def open_submission(event):
+    item_id = event.widget.focus()
+    print(item_id)
+    # new_frame = ResponseCommentTreeDisplay(nb)
+    # nb.add(new_frame, text='item_id')
+
+
+class RedditNotebook(ttk.Notebook):
+    pass
+
+
 def main():
-    # Create and configure root
     root = tk.Tk()
-    root.title("Incoming reddit submissions")
     root.geometry('700x300')
+    n = ttk.Notebook(root)
 
-    # Create and pack an IncomingSubmissions instance
-    interface = IncomingSubmissions(root)
-    interface.pack()
+    submission_frame = IncomingSubmissions(n)  # first page, which would get widgets gridded into it
+    comment_frame = ResponseCommentTreeDisplay(n)  # second page
 
-    # Loop
+    # Create menubar
+    menubar = tk.Menu()
+    # Add file menu
+    file_menu = tk.Menu(menubar, tearoff=0)
+    file_menu.add_command(label="Exit", command=comment_frame.stopRunning)
+    menubar.add_cascade(label="File", menu=file_menu)
+    # Add processing menu
+    proc_menu = tk.Menu(menubar, tearoff=0)
+    proc_menu.add_command(label="Load comments", command=comment_frame.load_comments)
+    menubar.add_cascade(label="Processing", menu=proc_menu)
+    root.config(menu=menubar)
+
+    n.add(submission_frame, text='Submissions')
+    n.add(comment_frame, text='Comments')
+    n.pack(expand=1, fill='both')
     root.mainloop()
 
 
