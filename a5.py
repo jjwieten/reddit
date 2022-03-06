@@ -29,7 +29,7 @@ class IncomingSubmissions(tk.Frame):
         self.tree.column('Title', width=400)
         self.tree.pack(side='right')
         # Treeview bind for submission viewing
-        self.tree.bind("<Double-1>", open_submission)
+        self.tree.bind("<Double-1>", RedditNotebook.open_submission)
 
         # Scale widget for submission speed
         self.speed_scale = tk.Scale(self, variable=self.speed_val, label="Queue delay",
@@ -227,9 +227,9 @@ class ResponseCommentTreeDisplay(CommentTreeDisplay):
             e = tk.Label(top, text="Please enter a valid URL\n")
             e.pack()
 
-def open_submission(event):
-    item_id = event.widget.focus()
-    print(item_id)
+#def open_submission(event):
+#    item_id = event.widget.focus()
+#    print(item_id)
     # new_frame = ResponseCommentTreeDisplay(nb)
     # nb.add(new_frame, text='item_id')
 
@@ -238,10 +238,12 @@ class RedditNotebook(ttk.Notebook):
     def __init__(self):
         sub_frame = IncomingSubmissions()
         com_frame = ResponseCommentTreeDisplay()
+        self.ctd = CommentTreeDisplay()
 
     def open_submission(event):
         item_id = event.widget.focus()
         print(item_id)
+        CommentTreeDisplay.showComments(ttk.Notebook, item_id)
         # new_frame = ResponseCommentTreeDisplay(nb)
         # nb.add(new_frame, text='item_id')
 
