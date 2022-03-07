@@ -15,13 +15,15 @@ reddit = praw.Reddit(
 class ResponseCommentTreeDisplay(CommentTreeDisplay):
     """Make frame for adding responses by user to selected comments"""
     def __init__(self, root):
-        # tk.Frame.__init__(self, CommentTreeDisplay)
         super().__init__(root)
         # Counting intreger to append to comment
         self.comment_int = 0
         self.tree.bind("<Double-1>", self.double_click_comment)
 
     def double_click_comment(self, event):
+        """
+        Make input window and get input
+        """
         item_id = event.widget.focus()
         # Create response window
         top = tk.Tk()
@@ -35,6 +37,9 @@ class ResponseCommentTreeDisplay(CommentTreeDisplay):
         top.mainloop()
 
     def add_comment_to_tree(self, parent_id, comment_text, top):
+        """
+        Add the user input (comment) to the tree below the selected comment
+        """
         if comment_text != "":
             # Generate an iid for Treeview comment
             comment_id = "{0}_{1}".format(parent_id, self.comment_int)

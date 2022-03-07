@@ -125,7 +125,6 @@ class IncomingSubmissions(tk.Frame):
                     # If neither are present, add by default.
                     else:
                         self.tree.insert('', 0, submission.id, text=submission.subreddit, values=[submission.title])
-                        # print(submission.subreddit, submission.title, "queue = ", len(self.queue))
                         sleep(self.speed_val.get())
 
 
