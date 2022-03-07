@@ -55,6 +55,9 @@ class CommentTreeDisplay(tk.Frame):
             else:
                 id = url_in.split("/")[-2]
             top.destroy()
+            # Clear the previous tree
+            for item in self.tree.get_children():
+                self.tree.delete(item)
             self.showComments(id)
         except IndexError:
             e = tk.Label(top, text="Please enter a valid URL\n")
