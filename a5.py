@@ -15,7 +15,6 @@ reddit = praw.Reddit(
 
 class IncomingSubmissions(tk.Frame):
     """Widget class for submission processing"""
-
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         self.queue = []
@@ -195,6 +194,7 @@ class CommentTreeDisplay(tk.Frame):
 
 
 class ResponseCommentTreeDisplay(CommentTreeDisplay):
+    """Class for creating a comment tree, in which respones can be added by user"""
     def __init__(self, root):
         # tk.Frame.__init__(self, CommentTreeDisplay)
         super().__init__(root)
@@ -203,6 +203,9 @@ class ResponseCommentTreeDisplay(CommentTreeDisplay):
         self.tree.bind("<Double-1>", self.double_click_comment)
 
     def double_click_comment(self, event):
+        """
+        Make input window and get input
+        """
         item_id = event.widget.focus()
         # Create response window
         top = tk.Tk()
@@ -216,6 +219,9 @@ class ResponseCommentTreeDisplay(CommentTreeDisplay):
         top.mainloop()
 
     def add_comment_to_tree(self, parent_id, comment_text, top):
+        """
+        Add the user input (comment) to the tree below the selected comment
+        """
         if comment_text != "":
             # Generate an iid for Treeview comment
             comment_id = "{0}_{1}".format(parent_id, self.comment_int)
@@ -235,6 +241,9 @@ class ResponseCommentTreeDisplay(CommentTreeDisplay):
 
 
 class RedditNotebook(ttk.Notebook):
+    """
+    Merge all displays and trees
+    """
     def __init__(self):
         sub_frame = IncomingSubmissions()
         com_frame = ResponseCommentTreeDisplay()
@@ -249,6 +258,7 @@ class RedditNotebook(ttk.Notebook):
 
 
 def main():
+    # Create window
     root = tk.Tk()
     root.geometry('700x300')
     n = ttk.Notebook(root)
