@@ -1,8 +1,5 @@
 import praw
 import tkinter as tk
-from tkinter import ttk
-import threading
-import time
 from a2 import CommentTreeDisplay
 
 
@@ -16,6 +13,7 @@ reddit = praw.Reddit(
 
 
 class ResponseCommentTreeDisplay(CommentTreeDisplay):
+    """Make frame for adding responses by user to selected comments"""
     def __init__(self, root):
         # tk.Frame.__init__(self, CommentTreeDisplay)
         super().__init__(root)

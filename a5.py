@@ -194,7 +194,7 @@ class CommentTreeDisplay(tk.Frame):
 
 
 class ResponseCommentTreeDisplay(CommentTreeDisplay):
-    """Class for creating a comment tree, in which respones can be added by user"""
+    """Make frame for adding responses by user to selected comments"""
     def __init__(self, root):
         # tk.Frame.__init__(self, CommentTreeDisplay)
         super().__init__(root)
