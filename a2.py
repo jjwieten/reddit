@@ -67,16 +67,19 @@ class CommentTreeDisplay(tk.Frame):
         submission = reddit.submission(id=c_id)
         for comment in submission.comments:
             self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
-            self.process_child_comments(comment.replies, comment)
+            self.process_child_comments(comment.replies, comment.id)
 
     def process_child_comments(self, parent, parent_id):
         """
         Recursive: find all child comments
         """
         for comment in parent:
-            self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
-            self.tree.move(comment.id, parent_id, 0)
-            self.process_child_comments(comment.replies, comment.id)
+            if type(comment).__name__ == "Comment":
+                self.tree.insert('', tk.END, text=comment.body, iid=comment.id, open=False)
+                self.tree.move(comment.id, parent_id, 0)
+                self.process_child_comments(comment.replies, comment.id)
+            else:
+                self.process_child_comments(comment.comments(), parent_id)
 
     def stopRunning(self):
         """
